@@ -6,6 +6,8 @@ Fiz esse projeto com o objetivo de aprender algumas das tecnologias mais usadas 
 
 O projeto consiste em uma tela inicial que possui um link e redireciona para uma tela de CRUD. Essa segunda tela faz o CRUD em uma tabela de Log (usu_tlogintegracao). Essa tabela já estava criada no banco de dados e eu só usei ela para esse exemplo. Ela possui relacionamento com outras duas tabelas (usu_tstatusintegracao e usu_ttipoarqintegracao), que servem apenas para carregar duas combos na tela pricipal.
 
+OBS: É necessário abrir o arquivo persistence.xml e alterar os dados de conexão com o banco de dados.
+
 O banco de dados utilizado para o desenvolvimento foi o Sql Server 2008.
 
 Seguem os scripts de criação das tabelas:
