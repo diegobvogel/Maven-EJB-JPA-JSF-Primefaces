@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:head >
+		<style>
+			.ui-widget, .ui-widget .ui-widget {
+			    font-size: 90%;
+			}
+		</style>
+	</h:head>	
+	
+	<h:body>
+	
+	<!-- Loading gif -->
+	<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" header="Carregando..." draggable="false" closable="false" resizable="false" position="center"  styleClass="dialog" >
+	    <center>
+	        <p:graphicImage value="images/ajax-loader.gif"/>
+	    </center>
+	</p:dialog>
+	<p:growl id="growl" life="3000" />
+	
+	
+	<p:dialog id="dgLogEditar" widgetVar="dlgLogEditar" closable="false" draggable="false" resizable="false" modal="true" header="Log de erro - Editar">
+		<h:form id="formEditar">
+			<p:panelGrid id="pnlLogEditar">
+				<p:row>
+					<p:column style="width: 200px">
+						<p:outputLabel for="status" value="Status"/>
+					</p:column>
+					<p:column>
+						<p:selectOneMenu filter="true" id="status" value="#{tLogintegracaoBEAN.tLogintegracao.statusintegracao}" style="width:250px" required="true" requiredMessage="O campo Status é obrigatório">
+			                <f:selectItem itemLabel="Selecione o status" itemValue=""/>
+			                <f:selectItems value="#{tLogintegracaoBEAN.statusList}" var="status" 
+			                itemValue="#{status}" itemLabel="#{status.descstatusinteg}" />
+			            </p:selectOneMenu>
+			            <p:message for="status" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="descLog" value="Descrição do log"/>
+					</p:column>
+					<p:column>
+						<p:inputText id="descLog" size="100" maxlength="255" value="#{tLogintegracaoBEAN.tLogintegracao.desclogintegracao}" required="true" requiredMessage="O campo Descrição do log é obrigatório">
+							<f:validateLength minimum="2" />
+						</p:inputText>
+						<p:message for="descLog" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="dtIntegracao" value="Data integração"/>
+					</p:column>
+					<p:column>
+						<p:calendar id="dtIntegracao" value="#{tLogintegracaoBEAN.tLogintegracao.dataintegracao}" pattern="dd/MM/yyyy" mask="true" effect="explode" size="8" required="true" requiredMessage="O campo Data integração é obrigatório"/>
+						<p:message for="dtIntegracao" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="nomeArquivo" value="Nome do arquivo"/>
+					</p:column>
+					<p:column>
+						<p:inputText id="nomeArquivo" size="30" maxlength="80" value="#{tLogintegracaoBEAN.tLogintegracao.nmarquivointegracao}" required="true" requiredMessage="O campo Nome do arquivo é obrigatório"/>
+						<p:message for="nomeArquivo" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="posErro" value="Posição erro"/>
+					</p:column>
+					<p:column>
+						<p:inputText id="posErro" size="9" maxlength="9" value="#{tLogintegracaoBEAN.tLogintegracao.numregistrointegracao}">
+							<f:convertNumber integerOnly="true" for="posErro" />
+						</p:inputText>
+						<p:message for="posErro" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="tipo" value="Tipo do Arquivo"/>
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="tipo" value="#{tLogintegracaoBEAN.tLogintegracao.idtipoarqintegracao}" style="width:250px">
+			                <f:selectItem itemLabel="Selecione o tipo" itemValue="" noSelectionOption="true" />
+			                <f:selectItems value="#{tLogintegracaoBEAN.tipoList}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.desctipoarqintegracao}" />
+			            </p:selectOneMenu>
+			            <p:message for="tipo" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="dtArqGerado" value="Data arquivo gerado"/>
+					</p:column>
+					<p:column>
+						<p:calendar id="dtArqGerado" value="#{tLogintegracaoBEAN.tLogintegracao.dtgeracaoarquivo}" pattern="dd/MM/yyyy" mask="true" effect="explode" size="8"/>
+						<p:message for="dtArqGerado" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="identRegistro" value="Identificação registro"/>
+					</p:column>
+					<p:column>
+						<p:inputText id="identRegistro" size="100" maxlength="255" value="#{tLogintegracaoBEAN.tLogintegracao.identregistro}"/>
+						<p:message for="identRegistro" display="text" />
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<p:outputLabel for="logTec" value="Log técnico"/>
+					</p:column>
+					<p:column>
+						<p:inputTextarea autoResize="false" id="logTec" rows="10" cols="50" value="#{tLogintegracaoBEAN.tLogintegracao.desclogerrotecnico}"/>
+   						<p:message for="logTec" display="text" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			
+			<p:growl id="growlEditar" life="3000" />
+			
+			<p:panelGrid columns="2">
+				<p:commandButton value="Editar" actionListener="#{tLogintegracaoBEAN.editar}"
+				update="pnlLogEditar growlEditar :formConsulta:panelListaLog"
+				oncomplete="PF('tableLogsWidget').clearFilters();"/>
+				
+				<p:commandButton value="Cancelar" oncomplete="PF('dlgLogEditar').hide();" actionListener="#{tLogintegracaoBEAN.limparObjeto}">
+				</p:commandButton>
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>		
+		
+	
+	
+		<h:form id="form">
+			<p:panel id="panelNovoLog" header="Cadastrar">
+				<p:panelGrid  style="width: 100%" id="panelCadastrar">
+					<p:row>
+						<p:column style="width: 200px">
+							<p:outputLabel for="status" value="Status"/>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu widgetVar="wgStatus" id="status" value="#{tLogintegracaoBEAN.status}" style="width:250px" required="true" requiredMessage="O campo Status é obrigatório">
+				                <f:selectItem itemLabel="Selecione o status" itemValue="" noSelectionOption="true" />
+				                <f:selectItems value="#{tLogintegracaoBEAN.statusList}" var="status" itemValue="#{status}" itemLabel="#{status.descstatusinteg}" />
+				            </p:selectOneMenu>
+				            <p:message for="status" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="descLog" value="Descrição do log"/>
+						</p:column>
+						<p:column>
+							<p:inputText id="descLog" size="100" maxlength="255" value="#{tLogintegracaoBEAN.tLogintegracao.desclogintegracao}" required="true" requiredMessage="O campo Descrição do log é obrigatório">
+								<f:validateLength minimum="2" />
+							</p:inputText>
+							<p:message for="descLog" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="dtIntegracao" value="Data integração"/>
+						</p:column>
+						<p:column>
+							<p:calendar id="dtIntegracao" value="#{tLogintegracaoBEAN.tLogintegracao.dataintegracao}" pattern="dd/MM/yyyy" mask="true" effect="explode" size="8" required="true" requiredMessage="O campo Data integração é obrigatório"/>
+							<p:message for="dtIntegracao" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="nomeArquivo" value="Nome do arquivo"/>
+						</p:column>
+						<p:column>
+							<p:inputText id="nomeArquivo" size="30" maxlength="80" value="#{tLogintegracaoBEAN.tLogintegracao.nmarquivointegracao}" required="true" requiredMessage="O campo Nome do arquivo é obrigatório"/>
+							<p:message for="nomeArquivo" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="posErro" value="Posição erro"/>
+						</p:column>
+						<p:column>
+							<p:inputText id="posErro" size="9" maxlength="9" value="#{tLogintegracaoBEAN.tLogintegracao.numregistrointegracao}">
+								<f:convertNumber integerOnly="true" for="posErro" />
+							</p:inputText>
+							<p:message for="posErro" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="tipo" value="Tipo do Arquivo"/>
+						</p:column>
+						<p:column>
+							<p:selectOneMenu widgetVar="wgTipo" id="tipo" value="#{tLogintegracaoBEAN.tipo}" style="width:250px">
+				                <f:selectItem itemLabel="Selecione o tipo" itemValue="" noSelectionOption="true" />
+				                <f:selectItems value="#{tLogintegracaoBEAN.tipoList}" var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.desctipoarqintegracao}" />
+				            </p:selectOneMenu>
+				            <p:message for="tipo" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="dtArqGerado" value="Data arquivo gerado"/>
+						</p:column>
+						<p:column>
+							<p:calendar id="dtArqGerado" value="#{tLogintegracaoBEAN.tLogintegracao.dtgeracaoarquivo}" pattern="dd/MM/yyyy" mask="true" effect="explode" size="8"/>
+							<p:message for="dtArqGerado" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="identRegistro" value="Identificação registro"/>
+						</p:column>
+						<p:column>
+							<p:inputText id="identRegistro" size="100" maxlength="255" value="#{tLogintegracaoBEAN.tLogintegracao.identregistro}"/>
+							<p:message for="identRegistro" display="text" />
+						</p:column>
+					</p:row>
+					
+					<p:row>
+						<p:column>
+							<p:outputLabel for="logTec" value="Log técnico"/>
+						</p:column>
+						<p:column>
+							<p:inputTextarea autoResize="false" id="logTec" rows="10" cols="100" value="#{tLogintegracaoBEAN.tLogintegracao.desclogerrotecnico}"/>
+    						<p:message for="logTec" display="text" />
+						</p:column>
+					</p:row>
+					
+				</p:panelGrid>
+				<p:commandButton global="true" id="ajax" name="Salvar" value="Salvar" 
+				oncomplete="PF('wgStatus').selectValue(''); PF('wgTipo').selectValue('');"
+				update="panelNovoLog growl :formConsulta:panelListaLog" 
+				actionListener="#{tLogintegracaoBEAN.salvar}" 
+				styleClass="ui-priority-primary" icon="ui-icon-refresh"/>
+				<p:growl id="growl" life="3000" />
+			</p:panel>
+		</h:form>
+			
+		<p:spacer/>
+			
+		<h:form id="formConsulta">
+			
+			<p:spacer/>
+			
+			
+			
+			<p:panel id="panelListaLog" header="Lista de logs">
+				<p:dataTable id="tableLogs" 
+							widgetVar="tableLogsWidget"
+							value="#{tLogintegracaoBEAN.listLogs}" 
+							filteredValue="#{tLogintegracaoBEAN.listLogsFiltrados}"
+							var="listLogsItem" 
+							style="font-size:10px;"
+							paginator="true"
+							rows="15">
+<!-- 					<f:facet name="header">Lista de Logs</f:facet> -->
+					<p:column headerText="Status" style="width: 10%;" filterBy="#{listLogsItem.statusintegracao.descstatusinteg}" sortBy="#{listLogsItem.statusintegracao.descstatusinteg}">
+				         <h:outputText value="#{listLogsItem.statusintegracao.descstatusinteg}"/>
+					</p:column>
+					<p:column headerText="Descrição do log" style="width: 10%;" filterBy="#{listLogsItem.desclogintegracao}">
+				         <h:outputText value="#{listLogsItem.desclogintegracao}"/>
+					</p:column>
+					<p:column headerText="Data integração"  style="width: 10%;" filterBy="#{listLogsItem.dataintegracao}" sortBy="#{listLogsItem.dataintegracao}">
+				         <h:outputText value="#{listLogsItem.dataintegracao}">
+<!-- 				         	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" /> -->
+				         </h:outputText>
+					</p:column>
+					<p:column headerText="Nome do arquivo" style="width: 20%; font-size:8px;" filterBy="#{listLogsItem.nmarquivointegracao}" sortBy="#{listLogsItem.nmarquivointegracao}">
+				         <h:outputText value="#{listLogsItem.nmarquivointegracao}"/>
+					</p:column>
+					<p:column headerText="Posição erro" style="width: 10%;" filterBy="#{listLogsItem.numregistrointegracao}" sortBy="#{listLogsItem.numregistrointegracao}">
+				         <h:outputText value="#{listLogsItem.numregistrointegracao}"/>
+					</p:column>
+					<p:column headerText="Tipo do Arquivo" style="width: 10%;" filterBy="#{listLogsItem.idtipoarqintegracao.desctipoarqintegracao}" sortBy="#{listLogsItem.idtipoarqintegracao.desctipoarqintegracao}">
+				         <h:outputText value="#{listLogsItem.idtipoarqintegracao.desctipoarqintegracao}"/>
+					</p:column>
+					<p:column headerText="Identificação registro" filterBy="#{listLogsItem.identregistro}" sortBy="#{listLogsItem.identregistro}">
+				         <h:outputText value="#{listLogsItem.identregistro}" style="width: 20%;"/>
+					</p:column>
+					<p:column headerText="Log técnico">
+				         <h:outputText value="#{listLogsItem.desclogerrotecnico}" style="width: 20%;"/>
+					</p:column>
+					<p:column style="width: 2%; padding: 5px 1px 6px 1px;">
+                        <p:commandButton icon="ui-icon-pencil" oncomplete="PF('dlgLogEditar').show()" update=":formEditar:pnlLogEditar">
+                        	<f:setPropertyActionListener value="#{listLogsItem}" target="#{tLogintegracaoBEAN.tLogintegracao}"></f:setPropertyActionListener>
+                        </p:commandButton>
+                    </p:column> 
+                    <p:column style="width: 2%; padding: 5px 1px 6px 1px;">
+                     	<p:commandButton icon="ui-icon-trash" actionListener="#{tLogintegracaoBEAN.excluir(listLogsItem)}" update=":growl :formConsulta:panelListaLog" oncomplete="PF('tableLogsWidget').clearFilters();"/>
+                    </p:column>
+				</p:dataTable>
+			</p:panel>
+		</h:form>
+	</h:body>
+</html>
